@@ -1,21 +1,18 @@
 {
-	"name": "ds_getsource_data",
+	"name": "ds_dynamic_source_blob",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "ls_AzureBlobStorage",
 			"type": "LinkedServiceReference"
 		},
-		"parameters": {
-			"filename": {
-				"type": "string"
-			}
+		"folder": {
+			"name": "Dynamic_Copy_Dataset"
 		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "MOCK_DATA.csv",
 				"container": "source"
 			},
 			"columnDelimiter": ",",
