@@ -1,22 +1,19 @@
 {
-	"name": "ds_getsource_data",
+	"name": "ds_destination_multiple_blob",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "ls_AzureBlobStorage",
 			"type": "LinkedServiceReference"
 		},
-		"parameters": {
-			"filename": {
-				"type": "string"
-			}
+		"folder": {
+			"name": "Copy_multiple_files"
 		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "MOCK_DATA.csv",
-				"container": "source"
+				"container": "destination"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
