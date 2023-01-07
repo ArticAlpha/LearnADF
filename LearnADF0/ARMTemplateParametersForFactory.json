@@ -4,6 +4,12 @@
 	"parameters": {
 		"factoryName": {
 			"value": "LearnADF0"
+		},
+		"kv_AzureKeyVault1_properties_typeProperties_baseUrl": {
+			"value": "https://Learnadfkv.vault.azure.net/"
+		},
+		"ls_AzureBlobStorage_properties_typeProperties_connectionString_secretName": {
+			"value": "blobstoragesecret"
 		}
 	}
 }

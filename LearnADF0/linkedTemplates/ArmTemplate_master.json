@@ -7,6 +7,14 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "LearnADF0"
 		},
+		"kv_AzureKeyVault1_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://Learnadfkv.vault.azure.net/"
+		},
+		"ls_AzureBlobStorage_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "blobstoragesecret"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -33,6 +41,12 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"kv_AzureKeyVault1_properties_typeProperties_baseUrl": {
+						"value": "[parameters('kv_AzureKeyVault1_properties_typeProperties_baseUrl')]"
+					},
+					"ls_AzureBlobStorage_properties_typeProperties_connectionString_secretName": {
+						"value": "[parameters('ls_AzureBlobStorage_properties_typeProperties_connectionString_secretName')]"
 					}
 				}
 			},
