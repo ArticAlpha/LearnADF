@@ -1,0 +1,47 @@
+{
+	"name": "ds_DelimitedText_copy_sink",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_AzureBlobStorage",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"Directory": {
+				"type": "string"
+			},
+			"Filename": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@dataset().Filename",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@dataset().Directory",
+					"type": "Expression"
+				},
+				"container": "destination"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"type": "String"
+			},
+			{
+				"type": "String"
+			},
+			{
+				"type": "String"
+			}
+		]
+	}
+}
