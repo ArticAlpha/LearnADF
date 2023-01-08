@@ -1,0 +1,23 @@
+{
+	"name": "ds_AzureSqlTable_source",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_AzureSqlDatabase",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"Source_Schema": {
+				"type": "string"
+			},
+			"Source_Table": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "copy tables from server to server"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	}
+}
