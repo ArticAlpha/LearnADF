@@ -15,6 +15,10 @@
 			"type": "string",
 			"defaultValue": "blobstoragesecret"
 		},
+		"ls_AzureSqlDatabase_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "AzureSqlDataBase"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -47,6 +51,9 @@
 					},
 					"ls_AzureBlobStorage_properties_typeProperties_connectionString_secretName": {
 						"value": "[parameters('ls_AzureBlobStorage_properties_typeProperties_connectionString_secretName')]"
+					},
+					"ls_AzureSqlDatabase_properties_typeProperties_connectionString_secretName": {
+						"value": "[parameters('ls_AzureSqlDatabase_properties_typeProperties_connectionString_secretName')]"
 					}
 				}
 			},

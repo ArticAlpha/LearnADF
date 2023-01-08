@@ -10,6 +10,9 @@
 		},
 		"ls_AzureBlobStorage_properties_typeProperties_connectionString_secretName": {
 			"value": "blobstoragesecret"
+		},
+		"ls_AzureSqlDatabase_properties_typeProperties_connectionString_secretName": {
+			"value": "AzureSqlDataBase"
 		}
 	}
 }
