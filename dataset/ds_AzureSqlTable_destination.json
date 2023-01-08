@@ -2,7 +2,7 @@
 	"name": "ds_AzureSqlTable_destination",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "ls_AzureSqlDatabase",
+			"referenceName": "ls_AzureSqlDatabase_destination",
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
