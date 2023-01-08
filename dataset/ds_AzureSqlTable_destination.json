@@ -5,11 +5,29 @@
 			"referenceName": "ls_AzureSqlDatabase",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"Dest_Schema": {
+				"type": "string"
+			},
+			"Dest_Table": {
+				"type": "string"
+			}
+		},
 		"folder": {
 			"name": "copy tables from server to server"
 		},
 		"annotations": [],
 		"type": "AzureSqlTable",
-		"schema": []
+		"schema": [],
+		"typeProperties": {
+			"schema": {
+				"value": "@dataset().Dest_Schema",
+				"type": "Expression"
+			},
+			"table": {
+				"value": "@dataset().Dest_Table",
+				"type": "Expression"
+			}
+		}
 	}
 }
