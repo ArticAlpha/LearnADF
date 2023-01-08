@@ -13,8 +13,21 @@
 				"type": "string"
 			}
 		},
+		"folder": {
+			"name": "copy multiple tables into blob storage"
+		},
 		"annotations": [],
 		"type": "AzureSqlTable",
-		"schema": []
+		"schema": [],
+		"typeProperties": {
+			"schema": {
+				"value": "@dataset().Schema",
+				"type": "Expression"
+			},
+			"table": {
+				"value": "@dataset().Table",
+				"type": "Expression"
+			}
+		}
 	}
 }
