@@ -14,6 +14,9 @@
 		"ls_AzureSqlDatabase_properties_typeProperties_connectionString_secretName": {
 			"value": "AzureSqlDataBase"
 		},
+		"ls_AzureSqlDatabase_destination_properties_typeProperties_connectionString_secretName": {
+			"value": "AzureSqlDatabaseDestination"
+		},
 		"containerUri": {
 			"value": ""
 		},

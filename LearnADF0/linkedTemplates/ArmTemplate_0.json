@@ -18,6 +18,10 @@
 		"ls_AzureSqlDatabase_properties_typeProperties_connectionString_secretName": {
 			"type": "string",
 			"defaultValue": "AzureSqlDataBase"
+		},
+		"ls_AzureSqlDatabase_destination_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "AzureSqlDatabaseDestination"
 		}
 	},
 	"variables": {
@@ -131,6 +135,50 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ls_AzureSqlDatabase_destination')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "this will connect with destination database",
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "kv_AzureKeyVault1",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "[parameters('ls_AzureSqlDatabase_destination_properties_typeProperties_connectionString_secretName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/kv_AzureKeyVault1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_AzureSqlTable__lookup')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_AzureSqlDatabase_destination",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "copy tables from server to server"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_AzureSqlDatabase_destination')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ds_AzureSqlTable_copy')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -160,6 +208,82 @@
 					},
 					"table": {
 						"value": "@dataset().Table",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_AzureSqlDatabase')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_AzureSqlTable_destination')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_AzureSqlDatabase_destination",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"Dest_Schema": {
+						"type": "string"
+					},
+					"Dest_Table": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "copy tables from server to server"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": {
+						"value": "@dataset().Dest_Schema",
+						"type": "Expression"
+					},
+					"table": {
+						"value": "@dataset().Dest_Table",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_AzureSqlDatabase_destination')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_AzureSqlTable_source')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_AzureSqlDatabase",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"Source_Schema": {
+						"type": "string"
+					},
+					"Source_Table": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "copy tables from server to server"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": {
+						"value": "@dataset().Source_Schema",
+						"type": "Expression"
+					},
+					"table": {
+						"value": "@dataset().Source_Table",
 						"type": "Expression"
 					}
 				}
@@ -757,6 +881,170 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/ds_source_multiple')]",
 				"[concat(variables('factoryId'), '/datasets/ds_destination_multiple_blob')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pl_copy_data_server_to_server')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Lookup_get_details",
+						"description": "",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "select * from dbo.structure",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "ds_AzureSqlTable__lookup",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "ForEach",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Lookup_get_details",
+								"dependencyConditions": [
+									"Completed"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lookup_get_details').output.value",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "Copy data activty source to destination",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "AzureSqlSource",
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"sink": {
+											"type": "AzureSqlSink",
+											"writeBehavior": "insert",
+											"sqlWriterUseTableLock": false
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "ds_AzureSqlTable_source",
+											"type": "DatasetReference",
+											"parameters": {
+												"Source_Schema": {
+													"value": "@item().Source_Schema",
+													"type": "Expression"
+												},
+												"Source_Table": {
+													"value": "@item().Source_Table",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "ds_AzureSqlTable_destination",
+											"type": "DatasetReference",
+											"parameters": {
+												"Dest_Schema": {
+													"value": "@item().Destination_Schema",
+													"type": "Expression"
+												},
+												"Dest_Table": {
+													"value": "@item().Destination_table",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								}
+							]
+						}
+					},
+					{
+						"name": "Lookup1",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "select * from [raw_data].[Address]\n",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "ds_AzureSqlTable__lookup",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Copy Tables from server to server dynamically"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_AzureSqlTable__lookup')]",
+				"[concat(variables('factoryId'), '/datasets/ds_AzureSqlTable_source')]",
+				"[concat(variables('factoryId'), '/datasets/ds_AzureSqlTable_destination')]"
 			]
 		}
 	]
