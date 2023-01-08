@@ -469,6 +469,9 @@
 						"type": "string"
 					}
 				},
+				"folder": {
+					"name": "copy multiple tables into blob storage"
+				},
 				"annotations": [],
 				"type": "DelimitedText",
 				"typeProperties": {
