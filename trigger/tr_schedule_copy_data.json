@@ -1,0 +1,32 @@
+{
+	"name": "tr_schedule_copy_data",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "pl_copy_data_server_to_server",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2023-01-11T04:08:00",
+				"timeZone": "India Standard Time",
+				"schedule": {
+					"minutes": [
+						43
+					],
+					"hours": [
+						9
+					]
+				}
+			}
+		}
+	}
+}
