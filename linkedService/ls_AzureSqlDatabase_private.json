@@ -1,0 +1,21 @@
+{
+	"name": "ls_AzureSqlDatabase_private",
+	"properties": {
+		"annotations": [],
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"connectionString": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "kv_AzureKeyVault1",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "AzureSqlDatabasePrivate"
+			}
+		},
+		"connectVia": {
+			"referenceName": "integrationRuntime1",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
