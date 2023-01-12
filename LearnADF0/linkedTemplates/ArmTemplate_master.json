@@ -23,6 +23,18 @@
 			"type": "string",
 			"defaultValue": "AzureSqlDatabaseDestination"
 		},
+		"ls_AzureSqlDatabase_private_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "AzureSqlDatabasePrivate"
+		},
+		"AzureSqlDatabase999_properties_privateLinkResourceId": {
+			"type": "string",
+			"defaultValue": "/subscriptions/cd889b2f-aaea-44c8-8985-93740b18b4c4/resourceGroups/Learning_ADF_rg/providers/Microsoft.Sql/servers/learn-adf-private"
+		},
+		"AzureSqlDatabase999_properties_groupId": {
+			"type": "string",
+			"defaultValue": "sqlServer"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -61,6 +73,15 @@
 					},
 					"ls_AzureSqlDatabase_destination_properties_typeProperties_connectionString_secretName": {
 						"value": "[parameters('ls_AzureSqlDatabase_destination_properties_typeProperties_connectionString_secretName')]"
+					},
+					"AzureSqlDatabase999_properties_privateLinkResourceId": {
+						"value": "[parameters('AzureSqlDatabase999_properties_privateLinkResourceId')]"
+					},
+					"AzureSqlDatabase999_properties_groupId": {
+						"value": "[parameters('AzureSqlDatabase999_properties_groupId')]"
+					},
+					"ls_AzureSqlDatabase_private_properties_typeProperties_connectionString_secretName": {
+						"value": "[parameters('ls_AzureSqlDatabase_private_properties_typeProperties_connectionString_secretName')]"
 					}
 				}
 			},

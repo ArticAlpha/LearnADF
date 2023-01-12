@@ -16,6 +16,15 @@
 		},
 		"ls_AzureSqlDatabase_destination_properties_typeProperties_connectionString_secretName": {
 			"value": "AzureSqlDatabaseDestination"
+		},
+		"ls_AzureSqlDatabase_private_properties_typeProperties_connectionString_secretName": {
+			"value": "AzureSqlDatabasePrivate"
+		},
+		"AzureSqlDatabase999_properties_privateLinkResourceId": {
+			"value": "/subscriptions/cd889b2f-aaea-44c8-8985-93740b18b4c4/resourceGroups/Learning_ADF_rg/providers/Microsoft.Sql/servers/learn-adf-private"
+		},
+		"AzureSqlDatabase999_properties_groupId": {
+			"value": "sqlServer"
 		}
 	}
 }

@@ -22,6 +22,18 @@
 		"ls_AzureSqlDatabase_destination_properties_typeProperties_connectionString_secretName": {
 			"type": "string",
 			"defaultValue": "AzureSqlDatabaseDestination"
+		},
+		"ls_AzureSqlDatabase_private_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "AzureSqlDatabasePrivate"
+		},
+		"AzureSqlDatabase999_properties_privateLinkResourceId": {
+			"type": "string",
+			"defaultValue": "/subscriptions/cd889b2f-aaea-44c8-8985-93740b18b4c4/resourceGroups/Learning_ADF_rg/providers/Microsoft.Sql/servers/learn-adf-private"
+		},
+		"AzureSqlDatabase999_properties_groupId": {
+			"type": "string",
+			"defaultValue": "sqlServer"
 		}
 	},
 	"variables": {
@@ -553,6 +565,53 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/pl_lookup')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "just a test activity to check private end point with azure key vault",
+				"activities": [
+					{
+						"name": "Lookup1",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "select 1",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "ds_AzureSqlTable_private",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Private-endpoint-connection"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_AzureSqlTable_private')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/pl_pipline2')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -695,6 +754,27 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ls_AzureSqlDatabase_destination')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_AzureSqlTable_private')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_AzureSqlDatabase_private",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Private-endpont-connection"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_AzureSqlDatabase_private')]"
 			]
 		},
 		{
@@ -1066,6 +1146,33 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ls_AzureSqlDatabase_private')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "kv_AzureKeyVault1",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "[parameters('ls_AzureSqlDatabase_private_properties_typeProperties_connectionString_secretName')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "integrationRuntime1",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime1')]",
+				"[concat(variables('factoryId'), '/linkedServices/kv_AzureKeyVault1')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/tr_schedule_copy_data')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
@@ -1101,6 +1208,54 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/pl_copy_data_server_to_server')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/integrationRuntime1')]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "Managed",
+				"typeProperties": {
+					"computeProperties": {
+						"location": "East US",
+						"dataFlowProperties": {
+							"computeType": "General",
+							"coreCount": 8,
+							"timeToLive": 10,
+							"cleanup": false
+						},
+						"pipelineExternalComputeScaleProperties": {
+							"timeToLive": 60
+						}
+					}
+				},
+				"managedVirtualNetwork": {
+					"type": "ManagedVirtualNetworkReference",
+					"referenceName": "default"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/managedVirtualNetworks/default')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/default')]",
+			"type": "Microsoft.DataFactory/factories/managedVirtualNetworks",
+			"apiVersion": "2018-06-01",
+			"properties": {},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/default/AzureSqlDatabase999')]",
+			"type": "Microsoft.DataFactory/factories/managedVirtualNetworks/managedPrivateEndpoints",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"privateLinkResourceId": "[parameters('AzureSqlDatabase999_properties_privateLinkResourceId')]",
+				"groupId": "[parameters('AzureSqlDatabase999_properties_groupId')]"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/managedVirtualNetworks/default')]"
 			]
 		}
 	]
