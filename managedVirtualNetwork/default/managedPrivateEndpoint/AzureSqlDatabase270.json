@@ -1,0 +1,7 @@
+{
+	"name": "AzureSqlDatabase270",
+	"properties": {
+		"privateLinkResourceId": "/subscriptions/cd889b2f-aaea-44c8-8985-93740b18b4c4/resourceGroups/Learning_ADF_rg/providers/Microsoft.Sql/servers/learn-adf-private",
+		"groupId": "sqlServer"
+	}
+}
