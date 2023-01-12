@@ -1,0 +1,15 @@
+{
+	"name": "ds_AzureSqlTable_private",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_AzureSqlDatabase_private",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Private-endpont-connection"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	}
+}
