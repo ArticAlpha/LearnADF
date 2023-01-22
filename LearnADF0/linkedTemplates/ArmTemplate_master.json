@@ -79,9 +79,6 @@
 					},
 					"AzureSqlDatabase999_properties_groupId": {
 						"value": "[parameters('AzureSqlDatabase999_properties_groupId')]"
-					},
-					"ls_AzureSqlDatabase_private_properties_typeProperties_connectionString_secretName": {
-						"value": "[parameters('ls_AzureSqlDatabase_private_properties_typeProperties_connectionString_secretName')]"
 					}
 				}
 			},
@@ -100,6 +97,9 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"ls_AzureSqlDatabase_private_properties_typeProperties_connectionString_secretName": {
+						"value": "[parameters('ls_AzureSqlDatabase_private_properties_typeProperties_connectionString_secretName')]"
 					}
 				}
 			},
